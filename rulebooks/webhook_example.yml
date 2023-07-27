@@ -1,0 +1,15 @@
+---
+- name: Listen for events on a webhook
+  hosts: all
+  sources:
+    - ansible.eda.webhook:
+        hosts: 0.0.0.0
+        port: 5000
+  rules:
+    - name: Say Hello
+      condition: event.payload.message == "Ansible is super cool"
+      action:
+        run_job_template:
+          name: '__Connection Test'
+          organization: 'Texas Roadracing'
+...
