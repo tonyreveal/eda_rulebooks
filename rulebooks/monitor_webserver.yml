@@ -1,0 +1,35 @@
+---
+- name: Listen for events on a webhook
+  hosts: all
+  sources:
+    - name: Check website
+      ansible.eda.url_check:
+        urls:
+          - http://trrfnsyj001.texasroadracing.com/index.html
+        delay: 90
+        verify_ssl: false
+
+  rules:
+    - name: 'Web server is up'
+      condition: event.url_check.status == "up" and event.url_check.status_code == 200
+      action:
+        debug:
+          msg: "Web server is available"
+
+    # - name: 'Web server is unavailable'
+    #   condition: event.url_check.status == "down"
+    #   action:
+    #     run_job_template:
+    #       name: 'Restart Apache'
+    #       organization: 'Texas Roadracing'
+    
+    - name: 'Web server is unavailable'
+      condition: event.url_check.status == "down"
+      action:
+        run_job_template:
+          name: 'Reboot VM'
+          organization: 'Texas Roadracing'
+          job_args:
+            extra_vars:
+              vm_name: trrfnsyj001.texasroadracing.com
+...
