@@ -24,11 +24,14 @@
             event.labels.alertname == "EDANodeUnschedulable"
 
       action:
-        debug:
-          msg: >-
-            Received {{ event.labels.alertname }}
-            for {{ event.labels.cluster }}/{{ event.labels.node }}
-            with status {{ event.status }}
+        print_event:
+          pretty: true
+
+        # debug:
+        #   msg: >-
+        #     Received {{ event.labels.alertname }}
+        #     for {{ event.labels.cluster }}/{{ event.labels.node }}
+        #     with status {{ event.status }}
 
         # run_workflow_template:
         #   name: "{{ workflow_template_name }}"
