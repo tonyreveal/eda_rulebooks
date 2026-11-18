@@ -24,6 +24,9 @@
             event.labels.alertname == "EDANodeUnschedulable"
 
       action:
+        debug:
+          msg: "An OpenShift node is currently unschedulable"
+
         # run_workflow_template:
         #   name: "{{ workflow_template_name }}"
         #   organization: "{{ workflow_organization }}"
