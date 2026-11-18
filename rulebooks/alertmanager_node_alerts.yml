@@ -25,7 +25,10 @@
 
       action:
         debug:
-          msg: "An OpenShift node is currently unschedulable"
+          msg: >-
+            Received {{ event.labels.alertname }}
+            for {{ event.labels.cluster }}/{{ event.labels.node }}
+            with status {{ event.status }}
 
         # run_workflow_template:
         #   name: "{{ workflow_template_name }}"
