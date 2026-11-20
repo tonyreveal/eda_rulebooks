@@ -1,0 +1,41 @@
+---
+- name: Respond to OpenShift node disk pressure
+  hosts: all
+
+  sources:
+    - name: openshift_alertmanager
+      ansible.eda.webhook:
+        host: 0.0.0.0
+        port: 5000
+      filters:
+        - eda.builtin.event_splitter:
+            splitter_key: payload.alerts
+
+  rules:
+    - name: Display firing node disk pressure alert
+      condition:
+        all:
+          - event.status == "firing"
+          - event.labels.automation_target == "eda"
+          - event.labels.alertname == "EDANodeDiskPressure"
+      action:
+        debug:
+          msg: >-
+            NODE DISK PRESSURE FIRING:
+            cluster={{ event.labels.cluster }}
+            node={{ event.labels.node }}
+            message={{ event.annotations.message }}
+
+    - name: Display resolved node disk pressure alert
+      condition:
+        all:
+          - event.status == "resolved"
+          - event.labels.automation_target == "eda"
+          - event.labels.alertname == "EDANodeDiskPressure"
+      action:
+        debug:
+          msg: >-
+            NODE DISK PRESSURE ALERT RESOLVED:
+            cluster={{ event.labels.cluster }}
+            node={{ event.labels.node }}
+...
